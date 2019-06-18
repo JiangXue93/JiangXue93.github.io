@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Form JSONP CORS,">
+  <meta name="keywords" content="Form,JSONP,CORS,">
 
 
 
@@ -80,14 +80,14 @@
 
 
 <meta name="description" content="跨域问题梳理需求：异步上传文件，获得上传成功与否的回调数据处理步骤 首先考虑使用ajax以post请求的方法,将文件以FormData的形式发送过去：12345678910111213141516var formFile = new FormData();formFile.append(&quot;file&quot;, e.target.files[0]);$.ajax(&amp;#123;  url: &quot;http://d">
-<meta name="keywords" content="Form JSONP CORS">
+<meta name="keywords" content="Form,JSONP,CORS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Form表单提交">
 <meta property="og:url" content="http://yoursite.com/2018/04/04/Form表单提交/index.html">
 <meta property="og:site_name" content="JX">
 <meta property="og:description" content="跨域问题梳理需求：异步上传文件，获得上传成功与否的回调数据处理步骤 首先考虑使用ajax以post请求的方法,将文件以FormData的形式发送过去：12345678910111213141516var formFile = new FormData();formFile.append(&quot;file&quot;, e.target.files[0]);$.ajax(&amp;#123;  url: &quot;http://d">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-19T10:18:37.563Z">
+<meta property="og:updated_time" content="2019-04-19T10:49:55.798Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Form表单提交">
 <meta name="twitter:description" content="跨域问题梳理需求：异步上传文件，获得上传成功与否的回调数据处理步骤 首先考虑使用ajax以post请求的方法,将文件以FormData的形式发送过去：12345678910111213141516var formFile = new FormData();formFile.append(&quot;file&quot;, e.target.files[0]);$.ajax(&amp;#123;  url: &quot;http://d">
@@ -366,7 +366,7 @@
 <p>参考资料：<a href="https://www.cnblogs.com/zichi/p/4620656.html" target="_blank" rel="noopener">https://www.cnblogs.com/zichi/p/4620656.html</a></p>
 </blockquote>
 </li>
-<li><p>考虑到要修改后端代码，我们回到ajax的方法上，发现在不采用jsonp的情况下，页面请求会被重定向到login页面，也就是说我们需要优先解决登录问题，在请求时候附带当前的cookie值即可：</p>
+<li><p>考虑到要修改后端代码，我们回到ajax的方法上，发现在不采用jsonp的情况下(用CORS的方法)，页面请求会被重定向到login页面，也就是说我们需要优先解决登录问题，在请求时候附带当前的cookie值即可：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xhrFields: &#123;</span><br><span class="line">    withCredentials: <span class="literal">true</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
@@ -405,7 +405,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Form-JSONP-CORS/" rel="tag"># Form JSONP CORS</a>
+            <a href="/tags/Form/" rel="tag"># Form</a>
+          
+            <a href="/tags/JSONP/" rel="tag"># JSONP</a>
+          
+            <a href="/tags/CORS/" rel="tag"># CORS</a>
           
         </div>
       
@@ -503,7 +507,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -514,7 +518,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -525,7 +529,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

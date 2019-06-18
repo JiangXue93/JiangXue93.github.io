@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="test,">
+  <meta name="keywords" content="debounce,throttle,">
 
 
 
@@ -79,15 +79,18 @@
 
 
 
-<meta name="keywords" content="test">
+<meta name="description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
+<meta name="keywords" content="debounce,throttle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="test">
-<meta property="og:url" content="http://yoursite.com/2019/03/19/test/index.html">
+<meta property="og:title" content="Debounce-Throttle">
+<meta property="og:url" content="http://yoursite.com/2019/06/18/Debounce/index.html">
 <meta property="og:site_name" content="JX">
+<meta property="og:description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-19T07:40:57.195Z">
+<meta property="og:updated_time" content="2019-06-18T10:34:04.928Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="test">
+<meta name="twitter:title" content="Debounce-Throttle">
+<meta name="twitter:description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
 
 
 
@@ -117,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/03/19/test/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/18/Debounce/">
 
 
 
 
 
-  <title>test | JX</title>
+  <title>Debounce-Throttle | JX</title>
   
 
 
@@ -250,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/19/test/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/18/Debounce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JX">
@@ -267,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">test</h1>
+          <h1 class="post-title" itemprop="name headline">Debounce-Throttle</h1>
         
 
         <div class="post-meta">
@@ -279,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-19T15:34:54+08:00">
-                2019-03-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-18T17:45:21+08:00">
+                2019-06-18
               </time>
             
 
@@ -302,8 +305,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/test/" itemprop="url" rel="index">
-                    <span itemprop="name">test</span>
+                  <a href="/categories/代码执行效率/" itemprop="url" rel="index">
+                    <span itemprop="name">代码执行效率</span>
                   </a>
                 </span>
 
@@ -339,7 +342,11 @@
       
 
       
-        
+        <h1 id="一、-概念"><a href="#一、-概念" class="headerlink" title="一、 概念"></a>一、 概念</h1><p>在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。</p>
+<p><strong>函数节流：</strong> 在一定的时间内，只触发一次js代码。<br><strong>函数防抖：</strong> 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。<br><a id="more"></a></p>
+<h1 id="二、函数节流"><a href="#二、函数节流" class="headerlink" title="二、函数节流"></a>二、函数节流</h1><p><strong>使用场景：</strong> 页面滚动图片懒加载。<br><strong>代码实现：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//节流函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">func,interval</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timeout;</span><br><span class="line">    <span class="keyword">let</span> startTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">        clearTimeout(timeout);</span><br><span class="line">        <span class="keyword">let</span> curTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">if</span>(curTime - startTime &lt;= interval)&#123;</span><br><span class="line">            <span class="comment">//小于规定时间间隔时，用setTimeout在指定时间后再执行</span></span><br><span class="line">            timeout = setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                func();</span><br><span class="line">            &#125;,interval)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//重新计时并执行函数</span></span><br><span class="line">            startTime = curTime;</span><br><span class="line">            func()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//事件处理程序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">realFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,throttle(realFunc,<span class="number">100</span>));</span><br></pre></td></tr></table></figure></p>
+<h1 id="三、函数防抖"><a href="#三、函数防抖" class="headerlink" title="三、函数防抖"></a>三、函数防抖</h1><p><strong>使用场景：</strong> 用户更改窗口大小，输入验证的监听函数的执行<br><strong>代码实现：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单的防抖动函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;  <span class="comment">// 定时器变量</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        clearTimeout(timer);  <span class="comment">// 每次触发时先清除上一次的定时器,然后重新计时</span></span><br><span class="line">        timer = setTimeout(func, wait);  <span class="comment">// 指定 xx ms 后触发真正想进行的操作 handler</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//事件处理程序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">realFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Success"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> input = <span class="built_in">document</span>.getElementById(<span class="string">'input'</span>);</span><br><span class="line">input.addEventListener(<span class="string">'click'</span>,debounce(realFunc,<span class="number">500</span>));</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -356,7 +363,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/test/" rel="tag"># test</a>
+            <a href="/tags/debounce/" rel="tag"># debounce</a>
+          
+            <a href="/tags/throttle/" rel="tag"># throttle</a>
           
         </div>
       
@@ -369,8 +378,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/19/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/04/16/跨域/" rel="next" title="跨域">
+                <i class="fa fa-chevron-left"></i> 跨域
               </a>
             
           </div>
@@ -378,10 +387,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/19/ie居中问题/" rel="prev" title="ie居中问题">
-                ie居中问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -433,8 +438,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -510,6 +524,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、-概念"><span class="nav-number">1.</span> <span class="nav-text">一、 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、函数节流"><span class="nav-number">2.</span> <span class="nav-text">二、函数节流</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、函数防抖"><span class="nav-number">3.</span> <span class="nav-text">三、函数防抖</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
