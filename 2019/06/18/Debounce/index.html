@@ -82,14 +82,14 @@
 <meta name="description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
 <meta name="keywords" content="debounce,throttle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Debounce-Throttle">
+<meta property="og:title" content="Throttle-Debounce">
 <meta property="og:url" content="http://yoursite.com/2019/06/18/Debounce/index.html">
 <meta property="og:site_name" content="JX">
 <meta property="og:description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-18T10:34:04.928Z">
+<meta property="og:updated_time" content="2019-06-19T09:19:57.504Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Debounce-Throttle">
+<meta name="twitter:title" content="Throttle-Debounce">
 <meta name="twitter:description" content="一、 概念在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。 函数节流： 在一定的时间内，只触发一次js代码。函数防抖： 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。">
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Debounce-Throttle | JX</title>
+  <title>Throttle-Debounce | JX</title>
   
 
 
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Debounce-Throttle</h1>
+          <h1 class="post-title" itemprop="name headline">Throttle-Debounce</h1>
         
 
         <div class="post-meta">
@@ -344,8 +344,16 @@
       
         <h1 id="一、-概念"><a href="#一、-概念" class="headerlink" title="一、 概念"></a>一、 概念</h1><p>在处理用户交互的过程中，我们需要限制事件触发的频率，使js代码高效率的执行。函数节流（throttle）和函数防抖（debounce）应运而生。</p>
 <p><strong>函数节流：</strong> 在一定的时间内，只触发一次js代码。<br><strong>函数防抖：</strong> 在多次触发的情况下，只有距离上次触发到达一定时间时才会真的执行js代码。<br><a id="more"></a></p>
-<h1 id="二、函数节流"><a href="#二、函数节流" class="headerlink" title="二、函数节流"></a>二、函数节流</h1><p><strong>使用场景：</strong> 页面滚动图片懒加载。<br><strong>代码实现：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//节流函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">func,interval</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timeout;</span><br><span class="line">    <span class="keyword">let</span> startTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">        clearTimeout(timeout);</span><br><span class="line">        <span class="keyword">let</span> curTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">if</span>(curTime - startTime &lt;= interval)&#123;</span><br><span class="line">            <span class="comment">//小于规定时间间隔时，用setTimeout在指定时间后再执行</span></span><br><span class="line">            timeout = setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                func();</span><br><span class="line">            &#125;,interval)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//重新计时并执行函数</span></span><br><span class="line">            startTime = curTime;</span><br><span class="line">            func()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//事件处理程序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">realFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,throttle(realFunc,<span class="number">100</span>));</span><br></pre></td></tr></table></figure></p>
+<h1 id="二、函数节流"><a href="#二、函数节流" class="headerlink" title="二、函数节流"></a>二、函数节流</h1><p><strong>使用场景：</strong> 页面滚动图片懒加载。<br><strong>代码实现：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//节流函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">func,interval</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;</span><br><span class="line">    <span class="keyword">let</span> startTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">        clearTimeout(timer);</span><br><span class="line">        <span class="keyword">let</span> curTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">if</span>(curTime - startTime &lt;= interval)&#123;</span><br><span class="line">            <span class="comment">//小于规定时间间隔时，用setTimeout在指定时间后再执行</span></span><br><span class="line">            timer = setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                func();</span><br><span class="line">            &#125;,interval)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//重新计时并执行函数</span></span><br><span class="line">            startTime = curTime;</span><br><span class="line">            func()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//事件处理程序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">realFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'success'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,throttle(realFunc,<span class="number">100</span>));</span><br></pre></td></tr></table></figure></p>
 <h1 id="三、函数防抖"><a href="#三、函数防抖" class="headerlink" title="三、函数防抖"></a>三、函数防抖</h1><p><strong>使用场景：</strong> 用户更改窗口大小，输入验证的监听函数的执行<br><strong>代码实现：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单的防抖动函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> timer;  <span class="comment">// 定时器变量</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        clearTimeout(timer);  <span class="comment">// 每次触发时先清除上一次的定时器,然后重新计时</span></span><br><span class="line">        timer = setTimeout(func, wait);  <span class="comment">// 指定 xx ms 后触发真正想进行的操作 handler</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//事件处理程序</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">realFunc</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"Success"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> input = <span class="built_in">document</span>.getElementById(<span class="string">'input'</span>);</span><br><span class="line">input.addEventListener(<span class="string">'click'</span>,debounce(realFunc,<span class="number">500</span>));</span><br></pre></td></tr></table></figure></p>
+<h1 id="四、三方插件"><a href="#四、三方插件" class="headerlink" title="四、三方插件"></a>四、三方插件</h1><ol>
+<li><a href="https://www.lodashjs.com/" target="_blank" rel="noopener">lodash</a></li>
+<li><a href="https://www.npmjs.com/package/lodash-decorators" target="_blank" rel="noopener">lodash-decorators</a></li>
+</ol>
+<h1 id="五、react中运用lodash"><a href="#五、react中运用lodash" class="headerlink" title="五、react中运用lodash"></a>五、react中运用lodash</h1><blockquote>
+<p>(合成事件对react的影响)[<a href="http://billqiu.github.io/2017/10/15/how-to-debounce-in-react/]" target="_blank" rel="noopener">http://billqiu.github.io/2017/10/15/how-to-debounce-in-react/]</a></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> debounce <span class="keyword">from</span> <span class="string">'lodash/debounce'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="title">extentds</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">        <span class="keyword">super</span>(props)</span><br><span class="line">        <span class="keyword">this</span>.onWindowResize = debounce(<span class="keyword">this</span>.onWindowResize, <span class="number">300</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    componentWillMount = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">window</span>.addEventListener(<span class="string">'resize'</span>, <span class="keyword">this</span>.onWindowResize)</span><br><span class="line">    &#125;</span><br><span class="line">    onWindowResize = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">window</span>.innerWidth &lt; <span class="number">1367</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.props.dispatch(&#123;</span><br><span class="line">                type:<span class="string">'global/toggleCollapsed'</span>,</span><br><span class="line">                payload: <span class="literal">true</span></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.props.dispatch(&#123;</span><br><span class="line">                type:<span class="string">'global/toggleCollapsed'</span>,</span><br><span class="line">                payload: <span class="literal">false</span></span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -387,6 +395,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/19/umi采坑指南/" rel="prev" title="umi采坑指南">
+                umi采坑指南 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -463,7 +475,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -474,7 +486,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -485,7 +497,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -534,7 +546,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、-概念"><span class="nav-number">1.</span> <span class="nav-text">一、 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、函数节流"><span class="nav-number">2.</span> <span class="nav-text">二、函数节流</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、函数防抖"><span class="nav-number">3.</span> <span class="nav-text">三、函数防抖</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、-概念"><span class="nav-number">1.</span> <span class="nav-text">一、 概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、函数节流"><span class="nav-number">2.</span> <span class="nav-text">二、函数节流</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、函数防抖"><span class="nav-number">3.</span> <span class="nav-text">三、函数防抖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、三方插件"><span class="nav-number">4.</span> <span class="nav-text">四、三方插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、react中运用lodash"><span class="nav-number">5.</span> <span class="nav-text">五、react中运用lodash</span></a></li></ol></div>
             
 
           </div>
