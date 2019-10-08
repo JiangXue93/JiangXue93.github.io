@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="test,">
+  <meta name="keywords" content="移动端,文字,适配,">
 
 
 
@@ -79,15 +79,18 @@
 
 
 
-<meta name="keywords" content="test">
+<meta name="description" content="在做我司小游戏h5过程中，这次采用了vw的方案：整个代码中的css按设计图px写代码，webpack引入postcss-px-to-viewport再编译打包为vw。 但是在测试的过程中发现，若用户设置了系统的文字大小，会对webview中的h5文字大小有影响，同时其他元素的大小并不会受到影响。可想而知，光文字的变化必定会导致布局杂乱，比如文本高度变化，文字折行，文本居中问题等。">
+<meta name="keywords" content="移动端,文字,适配">
 <meta property="og:type" content="article">
-<meta property="og:title" content="test">
-<meta property="og:url" content="http://yoursite.com/2019/03/19/test/index.html">
+<meta property="og:title" content="移动端文字适配">
+<meta property="og:url" content="http://yoursite.com/2019/10/08/移动端文字适配/index.html">
 <meta property="og:site_name" content="JX">
+<meta property="og:description" content="在做我司小游戏h5过程中，这次采用了vw的方案：整个代码中的css按设计图px写代码，webpack引入postcss-px-to-viewport再编译打包为vw。 但是在测试的过程中发现，若用户设置了系统的文字大小，会对webview中的h5文字大小有影响，同时其他元素的大小并不会受到影响。可想而知，光文字的变化必定会导致布局杂乱，比如文本高度变化，文字折行，文本居中问题等。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-19T07:40:57.195Z">
+<meta property="og:updated_time" content="2019-10-08T08:09:45.655Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="test">
+<meta name="twitter:title" content="移动端文字适配">
+<meta name="twitter:description" content="在做我司小游戏h5过程中，这次采用了vw的方案：整个代码中的css按设计图px写代码，webpack引入postcss-px-to-viewport再编译打包为vw。 但是在测试的过程中发现，若用户设置了系统的文字大小，会对webview中的h5文字大小有影响，同时其他元素的大小并不会受到影响。可想而知，光文字的变化必定会导致布局杂乱，比如文本高度变化，文字折行，文本居中问题等。">
 
 
 
@@ -117,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/03/19/test/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/08/移动端文字适配/">
 
 
 
 
 
-  <title>test | JX</title>
+  <title>移动端文字适配 | JX</title>
   
 
 
@@ -250,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/19/test/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/08/移动端文字适配/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="JX">
@@ -267,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">test</h1>
+          <h1 class="post-title" itemprop="name headline">移动端文字适配</h1>
         
 
         <div class="post-meta">
@@ -279,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-19T15:34:54+08:00">
-                2019-03-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-08T14:58:45+08:00">
+                2019-10-08
               </time>
             
 
@@ -302,8 +305,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/test/" itemprop="url" rel="index">
-                    <span itemprop="name">test</span>
+                  <a href="/categories/适配/" itemprop="url" rel="index">
+                    <span itemprop="name">适配</span>
                   </a>
                 </span>
 
@@ -339,7 +342,33 @@
       
 
       
-        
+        <p>在做我司小游戏h5过程中，这次采用了vw的方案：<br>整个代码中的css按设计图px写代码，webpack引入<code>postcss-px-to-viewport</code>再编译打包为vw。</p>
+<p>但是在测试的过程中发现，若用户设置了系统的文字大小，会对webview中的h5文字大小有影响，同时其他元素的大小并不会受到影响。可想而知，光文字的变化必定会导致布局杂乱，比如文本高度变化，文字折行，文本居中问题等。<br><a id="more"></a></p>
+<p>在PC端我么可以用<code>Ctrl+0</code>的方式将页面恢复原来的大小。但是移动端则无法处理。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ol>
+<li>ios： 给 body 设置 -webkit-text-size-adjust 属性实现的；</li>
+<li>Android： 每个元素的font-size的计算属性发生了改变；</li>
+</ol>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ol>
+<li><p>ios：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">body</span> &#123;</span><br><span class="line">    <span class="attribute">-webkit-text-size-adjust</span>: <span class="number">100%</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>android:</p>
+</li>
+</ol>
+<p>字体采用rem，在页面加载的时候根据缩放比例计算出html元素的字体大小即可。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $dom = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</span><br><span class="line">    $dom.style = <span class="string">'font-size:10px;'</span>;</span><br><span class="line">    <span class="built_in">document</span>.body.appendChild($dom);</span><br><span class="line">    <span class="comment">// 计算出放大后的字体</span></span><br><span class="line">    <span class="keyword">var</span> scaledFontSize = <span class="built_in">parseInt</span>(<span class="built_in">window</span>.getComputedStyle($dom, <span class="literal">null</span>).getPropertyValue(<span class="string">'font-size'</span>));</span><br><span class="line">    <span class="built_in">document</span>.body.removeChild($dom);</span><br><span class="line">    <span class="comment">// 计算原字体和放大后字体的比例</span></span><br><span class="line">    <span class="keyword">var</span> scaleFactor = <span class="number">10</span> / scaledFontSize;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 取html元素的字体大小</span></span><br><span class="line">    <span class="comment">// 注意，这个大小也经过缩放了</span></span><br><span class="line">    <span class="comment">// 所以下方计算的时候 *scaledFontSize是原来的html字体大小</span></span><br><span class="line">    <span class="comment">// 再次 *scaledFontSize才是我们要设置的大小</span></span><br><span class="line">    <span class="keyword">var</span> originRootFontSize = <span class="built_in">parseInt</span>(<span class="built_in">window</span>.getComputedStyle(<span class="built_in">document</span>.documentElement, <span class="literal">null</span>).getPropertyValue(<span class="string">'font-size'</span>));</span><br><span class="line">    <span class="built_in">document</span>.documentElement.style.fontSize = originRootFontSize * scaleFactor * scaleFactor + <span class="string">'px'</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结（移动端适配方案）"><a href="#总结（移动端适配方案）" class="headerlink" title="总结（移动端适配方案）"></a>总结（移动端适配方案）</h2><p>移动端在适配过程中不能只用vw做适配，需要引入rem。</p>
+<ol>
+<li>设置html的font-size为13.33333333vw（以设计稿750px为例，对应100vw，那么1px对应0.13333333vw，所以100px对应13.33333333vw）；</li>
+<li>这时的1rem对应13.33333333vw，即100px；</li>
+<li>css的font-size直接可以除以100变rem即可；</li>
+<li>块级元素宽高同样可以使用rem；</li>
+<li>采用上面方法修正系统级别的字体缩放问题（解决！）；</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="https://www.cnblogs.com/axl234/p/7753187.html" target="_blank" rel="noopener">移动端用户设置字体放大导致的问题</a><br><a href="https://www.jianshu.com/p/5d7779473413" target="_blank" rel="noopener">最简单的移动端适配方案(rem+vw)</a></p>
+</blockquote>
+
       
     </div>
     
@@ -356,7 +385,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/test/" rel="tag"># test</a>
+            <a href="/tags/移动端/" rel="tag"># 移动端</a>
+          
+            <a href="/tags/文字/" rel="tag"># 文字</a>
+          
+            <a href="/tags/适配/" rel="tag"># 适配</a>
           
         </div>
       
@@ -369,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/19/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/07/09/a标签中的void(0)/" rel="next" title="a标签中的void(0)">
+                <i class="fa fa-chevron-left"></i> a标签中的void(0)
               </a>
             
           </div>
@@ -378,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/19/ie居中问题/" rel="prev" title="ie居中问题">
-                ie居中问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -433,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -510,6 +548,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结（移动端适配方案）"><span class="nav-number">3.</span> <span class="nav-text">总结（移动端适配方案）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
