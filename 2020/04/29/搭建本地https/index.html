@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="JX">
 <meta property="og:description" content="背景最近接入云游戏，发现他们sdk初始化前需要判断window.crypto.subtle来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现window.crypto.subtle返回undefined，在MDN发现要使用window.crypto.subtle是有前提条件的：  Secure context:This feature is available only">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-29T08:48:12.386Z">
+<meta property="og:updated_time" content="2020-04-29T08:49:34.718Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建本地https">
 <meta name="twitter:description" content="背景最近接入云游戏，发现他们sdk初始化前需要判断window.crypto.subtle来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现window.crypto.subtle返回undefined，在MDN发现要使用window.crypto.subtle是有前提条件的：  Secure context:This feature is available only">
@@ -384,8 +384,7 @@
 <blockquote>
 <p>我没有操作这个命令，暂时不知道什么作用</p>
 </blockquote>
-<h3 id="生成证书"><a href="#生成证书" class="headerlink" title="生成证书"></a>生成证书</h3><p>针对测试域名a.b.cn生成证书，多个域名用空格分隔:</p>
-<p><code>mkcert a.b.cn</code></p>
+<h3 id="生成证书"><a href="#生成证书" class="headerlink" title="生成证书"></a>生成证书</h3><p>针对测试域名a.b.cn生成证书，多个域名用空格分隔<code>mkcert a.b.cn</code></p>
 <p>命令运行成功后，会在<code>C:\Windows\System32\</code>下生成对应的证书文件<code>a.b.cn-key.pem</code>和<code>a.b.cn.pem</code></p>
 <h1 id="三、koa-https服务"><a href="#三、koa-https服务" class="headerlink" title="三、koa https服务"></a>三、koa https服务</h1><p>在项目的根下新建文件夹static 存放已经生成的两个证书。</p>
 <p>现在我们来改造一下我们的服务：</p>
