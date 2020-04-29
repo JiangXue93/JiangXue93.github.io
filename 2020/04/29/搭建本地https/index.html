@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="本地,https,证书,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="背景最近接入云游戏，发现他们sdk初始化前需要判断window.crypto.subtle来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现window.crypto.subtle返回undefined，在MDN发现要使用window.crypto.subtle是有前提条件的：  Secure context:This feature is available only">
+<meta name="keywords" content="本地,https,证书">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建本地https">
+<meta property="og:url" content="http://yoursite.com/2020/04/29/搭建本地https/index.html">
+<meta property="og:site_name" content="JX">
+<meta property="og:description" content="背景最近接入云游戏，发现他们sdk初始化前需要判断window.crypto.subtle来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现window.crypto.subtle返回undefined，在MDN发现要使用window.crypto.subtle是有前提条件的：  Secure context:This feature is available only">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-29T08:43:42.170Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建本地https">
+<meta name="twitter:description" content="背景最近接入云游戏，发现他们sdk初始化前需要判断window.crypto.subtle来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现window.crypto.subtle返回undefined，在MDN发现要使用window.crypto.subtle是有前提条件的：  Secure context:This feature is available only">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/29/搭建本地https/">
+
+
+
+
+
+  <title>搭建本地https | JX</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JX</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/29/搭建本地https/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="JX">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JX">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建本地https</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-29T15:17:12+08:00">
+                2020-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webpack/" itemprop="url" rel="index">
+                    <span itemprop="name">webpack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近接入云游戏，发现他们sdk初始化前需要判断<code>window.crypto.subtle</code>来做加密计算，不然会无法加密。本地开发过程中使用koa搭建http服务器。发现<code>window.crypto.subtle</code>返回<code>undefined</code>，在<a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/subtle" target="_blank" rel="noopener">MDN</a>发现要使用<code>window.crypto.subtle</code>是有前提条件的：</p>
+<blockquote>
+<p>Secure context:This feature is available only in secure contexts (HTTPS), in some or all supporting browsers.</p>
+</blockquote>
+<p>意思就是要用https才能使用（手动狗头）</p>
+<p>注意不要使用mdn-cn，这句Secure context直接被翻译官给忽略了！（神坑！！！）</p>
+<p>所以被逼无奈着手解决开发环境开启https服务器的“开心”旅程~<br><a id="more"></a></p>
+<h1 id="一、koa-http服务"><a href="#一、koa-http服务" class="headerlink" title="一、koa http服务"></a>一、koa http服务</h1><p>为了快速搭建静态服务器，我这里采用koa，操作步骤非常简单</p>
+<ol>
+<li><p>新建文件夹，并初始化工程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm init -y</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装依赖（避免全局安装）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa koa-static --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根目录创建Html，css等文件</p>
+</li>
+<li><p>根目录创建server.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 0.导入需要的资源包</span></span><br><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"><span class="keyword">const</span> serve = <span class="built_in">require</span>(<span class="string">'koa-static'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1.主页静态网页 把静态页统一放到public中管理</span></span><br><span class="line"><span class="keyword">const</span> home   = serve(path.join(__dirname));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3.分配路由</span></span><br><span class="line">app.use(home); </span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>项目下运行<code>node server</code>，当然你也可以在 package.json 添加对应script，并运行它。</p>
+</li>
+<li><p>浏览器访问<code>localhost:3000</code>即可</p>
+</li>
+</ol>
+<h1 id="二、生成证书"><a href="#二、生成证书" class="headerlink" title="二、生成证书"></a>二、生成证书</h1><p>要想完成https的搭建，肯定少不了证书。但是证书都是和域名相关联的，证书申请也非常麻烦，所以我们可以用 <code>mkcert</code> —— 一个简单的零配置工具，可以使用您喜欢的任何名称制作本地可信赖的SSL开发证书。</p>
+<p>window 用户需要提前安装包管理工具 —— <a href="https://www.chocolatey.org/install" target="_blank" rel="noopener">Chocolatey</a></p>
+<h3 id="Chocolatey安装过程"><a href="#Chocolatey安装过程" class="headerlink" title="Chocolatey安装过程"></a>Chocolatey安装过程</h3><ol>
+<li><p>window下打开PowerShell，找不到的话应该是在<code>C:\Windows\System32\WindowsPowerShell\v1.0</code>。用管理员权限打开，不然会提示权限问题。</p>
+</li>
+<li><p>输入<a href="https://www.chocolatey.org/install" target="_blank" rel="noopener">安装页面</a>的command code，回车即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(&apos;https://chocolatey.org/install.ps1&apos;))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>输入下面命令能看到版本号，表示安装成功：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装mkcert"><a href="#安装mkcert" class="headerlink" title="安装mkcert"></a>安装mkcert</h3><p>在PowerShell里输入<code>choco install mkcert</code></p>
+<h3 id="安装CA"><a href="#安装CA" class="headerlink" title="安装CA"></a>安装CA</h3><p>使用<code>mkcert -install</code>自动在系统根存储中创建并安装本地CA</p>
+<blockquote>
+<p>我没有操作这个命令，暂时不知道什么作用</p>
+</blockquote>
+<h3 id="生成证书"><a href="#生成证书" class="headerlink" title="生成证书"></a>生成证书</h3><p>针对测试域名a.b.cn生成证书，多个域名用空格分隔:</p>
+<figure class="highlight plain"><figcaption><span>a.b.cn```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">命令运行成功后，会在`C:\Windows\System32\`下生成对应的证书文件`a.b.cn-key.pem`和`a.b.cn.pem`</span><br><span class="line"></span><br><span class="line"># 三、koa https服务</span><br><span class="line">在项目的根下新建文件夹static 存放已经生成的两个证书。</span><br><span class="line"></span><br><span class="line">现在我们来改造一下我们的服务：</span><br><span class="line"></span><br><span class="line">1. 安装依赖</span><br><span class="line">```cnpm i -S https fs koa-sslify</span><br></pre></td></tr></table></figure>
+<p>https 用于启动https服务<br>fs用于获取读取证书文件<br>koa-sslify 用于将http请求强制转换为https请求</p>
+<ol start="2">
+<li>修改server.js<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"><span class="keyword">const</span> serve = <span class="built_in">require</span>(<span class="string">'koa-static'</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> https = <span class="built_in">require</span>(<span class="string">'https'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> enforceHttps = <span class="built_in">require</span>(<span class="string">'koa-sslify'</span>).default;</span><br><span class="line"></span><br><span class="line">app.use(enforceHttps());</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> home = serve(path.join(__dirname));</span><br><span class="line">app.use(home);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  key: fs.readFileSync(<span class="string">'./static/a.b.cn-key.pem'</span>),</span><br><span class="line">  cert: fs.readFileSync(<span class="string">'./static/a.b.cn.pem'</span>)</span><br><span class="line">&#125;</span><br><span class="line">https.createServer(options, app.callback()).listen(<span class="number">3000</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'-----server on 3000--------'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>注意：<code>const enforceHttps = require(&#39;koa-sslify&#39;).default;</code>要加default，不然会报错enforceHttps不是function。</p>
+<p>运行server.js访问https//a.b.cn:3000即可</p>
+<blockquote>
+<p>a.b.cn不要忘了绑定本地的host： <code>127.0.0.1 a.b.cn</code></p>
+</blockquote>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>mkcert 生成的证书仅限测试，切记生产环境使用！！！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/本地/" rel="tag"># 本地</a>
+          
+            <a href="/tags/https/" rel="tag"># https</a>
+          
+            <a href="/tags/证书/" rel="tag"># 证书</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/15/浅析react-hock/" rel="next" title="浅析react-hock">
+                <i class="fa fa-chevron-left"></i> 浅析react-hock
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">JX</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/jiangxue93" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:bupt_jx@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、koa-http服务"><span class="nav-number">2.</span> <span class="nav-text">一、koa http服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、生成证书"><span class="nav-number">3.</span> <span class="nav-text">二、生成证书</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chocolatey安装过程"><span class="nav-number">3.0.1.</span> <span class="nav-text">Chocolatey安装过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装mkcert"><span class="nav-number">3.0.2.</span> <span class="nav-text">安装mkcert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装CA"><span class="nav-number">3.0.3.</span> <span class="nav-text">安装CA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成证书"><span class="nav-number">3.0.4.</span> <span class="nav-text">生成证书</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">4.</span> <span class="nav-text">最后</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">JX</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
